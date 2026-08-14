@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/whatsapp/bot/:path*",
+      "destination": "http://REPLACE_WITH_BACKEND_HOST:9081/whatsapp/bot/:path*"
+    }
+  ]
+}
