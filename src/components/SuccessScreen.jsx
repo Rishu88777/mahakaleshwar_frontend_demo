@@ -1,33 +1,28 @@
 import { useEffect, useState } from 'react'
-import { QRCodeSVG } from 'qrcode.react'
 import { confirmBooking } from '../api'
 import { WA_NUMBER } from '../config'
 import { rupee } from '../utils/format'
 
-const REDIRECT_SECONDS = 8
+const CONFIRM_AFTER_SECONDS = 5 // WhatsApp ticket API is called after this pause
+const REDIRECT_SECONDS = 10
 
 export default function SuccessScreen({ t, result }) {
   const [seconds, setSeconds] = useState(REDIRECT_SECONDS)
+  const [sent, setSent] = useState(false)
 
-  // No prefilled text — the confirm API already pushes the QR ticket into
-  // the chat automatically before the user lands back on WhatsApp.
+  // No prefilled text — the confirm API pushes the QR ticket into the chat
+  // automatically; the user just lands back on WhatsApp and finds it there.
   const waLink = `https://wa.me/${WA_NUMBER}`
 
-  const qrPayload = [
-    'MAHAKAL-TICKET',
-    result.bookingId,
-    result.serviceName,
-    `${result.bookingDate} ${result.timeSlot}`,
-    `${result.persons} person(s)`,
-    `PAID ${result.amount}`
-  ].join('|')
-
   useEffect(() => {
-    // fire immediately so the QR ticket is already in the chat when the user lands
-    confirmBooking(result.bookingId)
+    // deliver the WhatsApp QR ticket 5s after payment success
+    const confirmTimer = setTimeout(async () => {
+      await confirmBooking(result.bookingId)
+      setSent(true)
+    }, CONFIRM_AFTER_SECONDS * 1000)
     const tick = setInterval(() => setSeconds((s) => (s > 0 ? s - 1 : 0)), 1000)
     const go = setTimeout(() => { window.location.href = waLink }, REDIRECT_SECONDS * 1000)
-    return () => { clearInterval(tick); clearTimeout(go) }
+    return () => { clearTimeout(confirmTimer); clearInterval(tick); clearTimeout(go) }
   }, [waLink, result.bookingId])
 
   return (
@@ -45,12 +40,7 @@ export default function SuccessScreen({ t, result }) {
           </div>
         </div>
 
-        <div className="ticket-qr">
-          <div className="qr-frame">
-            <QRCodeSVG value={qrPayload} size={172} fgColor="#7a0f16" bgColor="#ffffff" level="M" />
-          </div>
-        </div>
-        <div className="ticket-id">{result.bookingId}</div>
+        <div className="ticket-id" style={{ paddingTop: 16 }}>{result.bookingId}</div>
 
         <div className="ticket-tear" aria-hidden="true"></div>
 
@@ -66,11 +56,18 @@ export default function SuccessScreen({ t, result }) {
             <span className="k">{t.amount}</span>
             <span className="v">{rupee(result.amount)} <span className="paid-badge">✓ {t.paidVia}</span></span>
           </div>
-          <p style={{ fontSize: 12, color: 'var(--text-sec)', marginTop: 8 }}>{t.ticketNote}</p>
         </div>
       </div>
 
-      <div style={{ maxWidth: 360, margin: '18px auto 0' }}>
+      <div className={`wa-status ${sent ? 'sent' : ''}`} role="status">
+        {sent ? (
+          <>✅ {t.waTicketSent}</>
+        ) : (
+          <><span className="wa-mini-spinner" aria-hidden="true"></span> {t.waTicketSending}</>
+        )}
+      </div>
+
+      <div style={{ maxWidth: 360, margin: '16px auto 0' }}>
         <a className="btn-wa" href={waLink}>
           💬 {t.backToWhatsApp}
         </a>

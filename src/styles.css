@@ -598,6 +598,32 @@ input, select { font-family: inherit; font-size: 15px; }
 }
 .redirect-note { margin-top: 14px; font-size: 13px; color: var(--text-sec); }
 
+/* WhatsApp ticket delivery status */
+.wa-status {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  max-width: 360px;
+  margin: 16px auto 0;
+  padding: 11px 14px;
+  border-radius: 12px;
+  font-size: 13px; font-weight: 600;
+  color: var(--amber-900);
+  background: var(--grad-strip);
+  border: 1px dashed var(--amber-400);
+  transition: all 0.3s;
+}
+.wa-status.sent {
+  color: var(--green);
+  background: #f0fdf4;
+  border: 1px solid #86efac;
+}
+.wa-mini-spinner {
+  width: 15px; height: 15px; flex: none;
+  border-radius: 50%;
+  border: 2px solid var(--amber-200);
+  border-bottom-color: var(--amber-600);
+  animation: spin 0.9s linear infinite;
+}
+
 /* ── Footer ─────────────────────────────────────────────── */
 .footer {
   margin-top: 28px;
