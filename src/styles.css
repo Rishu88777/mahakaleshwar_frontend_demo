@@ -387,18 +387,109 @@ input, select { font-family: inherit; font-size: 15px; }
   font-family: var(--font-display);
 }
 
-.upi-apps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 12px; }
-.upi-app {
-  display: flex; flex-direction: column; align-items: center; gap: 6px;
+/* ── UPI payment sheet ──────────────────────────────────── */
+.pay-card {
+  margin-top: 12px;
   background: var(--white);
-  border: 1.5px solid var(--amber-200);
-  border-radius: 12px;
-  padding: 12px 6px;
-  transition: all 0.15s;
+  border: 1px solid var(--amber-200);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: 16px;
+  position: relative;
+  overflow: hidden;
 }
-.upi-app.active { border-color: var(--amber-600); background: var(--amber-50); box-shadow: var(--shadow-sm); }
-.upi-app .upi-icon { font-size: 24px; line-height: 1; }
-.upi-app .upi-name { font-size: 10.5px; font-weight: 700; color: var(--text); }
+.pay-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  background: var(--grad-btn);
+}
+.pay-card-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.pay-card-title {
+  display: flex; align-items: center; gap: 10px;
+  font-family: var(--font-display);
+  font-weight: 700; font-size: 17px; color: var(--maroon);
+}
+.npci-chip {
+  font-size: 10px; font-weight: 800; letter-spacing: 0.04em;
+  color: var(--amber-800);
+  background: var(--amber-100);
+  border: 1px solid var(--amber-300);
+  border-radius: var(--radius-pill);
+  padding: 3px 9px;
+  white-space: nowrap;
+}
+.pay-card-sub { font-size: 12.5px; color: var(--text-sec); margin-top: 6px; }
+
+.upi-apps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 14px; }
+.upi-tile {
+  position: relative;
+  display: flex; flex-direction: column; align-items: center; gap: 7px;
+  background: var(--white);
+  border: 1.5px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 13px 4px 10px;
+  transition: all 0.18s;
+}
+.upi-tile:active { transform: scale(0.96); }
+.upi-tile.active {
+  border-color: var(--amber-600);
+  background: linear-gradient(to bottom, #fff, var(--amber-50));
+  box-shadow: 0 4px 14px rgba(217, 119, 6, 0.22);
+  transform: translateY(-2px);
+}
+.upi-check {
+  position: absolute; top: -7px; right: -7px;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: var(--grad-btn);
+  color: #fff; font-size: 11px; font-weight: 800;
+  display: grid; place-items: center;
+  box-shadow: 0 2px 6px rgba(217, 119, 6, 0.45);
+  animation: pop 0.25s ease both;
+}
+.upi-logo-wrap {
+  width: 40px; height: 40px;
+  display: grid; place-items: center;
+  border-radius: 12px;
+  background: #fafafa;
+}
+.upi-tile.active .upi-logo-wrap { background: #fff; }
+.upi-tile .upi-name { font-size: 10px; font-weight: 700; color: var(--text); line-height: 1.1; text-align: center; }
+.upi-tile.active .upi-name { color: var(--amber-800); }
+
+.upi-redirect-hint {
+  display: flex; align-items: center; gap: 8px;
+  margin-top: 14px;
+  font-size: 12.5px; color: var(--amber-900);
+  background: var(--grad-strip);
+  border: 1px dashed var(--amber-400);
+  border-radius: 10px;
+  padding: 9px 12px;
+}
+.upi-hint-logo { display: grid; place-items: center; flex: none; }
+
+.trust-row {
+  display: flex; justify-content: space-between; gap: 6px;
+  margin-top: 14px; padding-top: 12px;
+  border-top: 1px solid var(--amber-100);
+  font-size: 10.5px; font-weight: 700; color: var(--text-sec);
+}
+.veil-app-logo {
+  width: 76px; height: 76px;
+  border-radius: 20px;
+  background: #fff;
+  border: 1px solid var(--amber-200);
+  box-shadow: var(--shadow-lg);
+  display: grid; place-items: center;
+  animation: pop 0.3s ease both;
+}
+.veil-steps { display: flex; gap: 8px; }
+.veil-dot {
+  width: 9px; height: 9px; border-radius: 50%;
+  background: var(--amber-200);
+  transition: background 0.3s;
+}
+.veil-dot.on { background: var(--amber-600); }
 .secure-note {
   display: flex; align-items: center; justify-content: center; gap: 6px;
   font-size: 12px; color: var(--text-sec); margin-top: 12px;

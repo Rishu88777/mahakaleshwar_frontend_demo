@@ -9,9 +9,9 @@ const REDIRECT_SECONDS = 8
 export default function SuccessScreen({ t, result }) {
   const [seconds, setSeconds] = useState(REDIRECT_SECONDS)
 
-  // Pre-filled message matches the bot's BOOKING_STATUS_REGEX ("ticket MK-xxxx")
-  const waText = encodeURIComponent(`Ticket ${result.bookingId}`)
-  const waLink = `https://wa.me/${WA_NUMBER}?text=${waText}`
+  // No prefilled text — the confirm API already pushes the QR ticket into
+  // the chat automatically before the user lands back on WhatsApp.
+  const waLink = `https://wa.me/${WA_NUMBER}`
 
   const qrPayload = [
     'MAHAKAL-TICKET',

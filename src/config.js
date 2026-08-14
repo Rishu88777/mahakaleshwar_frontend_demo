@@ -1,5 +1,5 @@
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || ''
-export const WA_NUMBER = import.meta.env.VITE_WA_NUMBER || '919990084734'
+export const WA_NUMBER = import.meta.env.VITE_WA_NUMBER || '918178164282'
 export const OFFICIAL_SITE = 'https://www.shrimahakaleshwar.mp.gov.in/'
 export const HELPLINE = '1800-233-1008'
 
