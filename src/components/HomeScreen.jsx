@@ -6,7 +6,7 @@ export default function HomeScreen({ t, lang, devotee, onSelect, onAbout }) {
   const greetName = devotee.name || t.bhakt
   return (
     <main>
-      {/* Hero — official-site style: full-bleed photo + amber gradient overlay */}
+      {/* Hero — full-bleed photo under a twilight overlay with a soft starfield */}
       <section className="hero">
         <img className="hero-bg" src="/images/temple-hero.png" alt={t.templeFull} />
         <div className="hero-content">
