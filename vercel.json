@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/whatsapp/bot/:path*",
-      "destination": "https://4a2f-103-83-128-60.ngrok-free.app/whatsapp/bot/:path*"
+      "destination": "http://35.200.250.116:9081/whatsapp/bot/:path*"
     }
   ]
 }

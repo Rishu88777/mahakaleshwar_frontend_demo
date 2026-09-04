@@ -1,5 +1,14 @@
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || ''
-export const WA_NUMBER = import.meta.env.VITE_WA_NUMBER || '918447073740'
+const CONFIGURED_API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/+$/, '')
+
+// A plain http:// backend cannot be called from an https:// page (mixed content
+// is blocked silently by the browser). In that case fall back to same-origin
+// paths so the platform rewrite (see vercel.json) proxies to the backend.
+export const API_BASE_URL =
+  CONFIGURED_API_BASE_URL.startsWith('http://') && window.location.protocol === 'https:'
+    ? ''
+    : CONFIGURED_API_BASE_URL
+
+export const WA_NUMBER = import.meta.env.VITE_WA_NUMBER || '919811031739'
 export const OFFICIAL_SITE = 'https://www.shrimahakaleshwar.mp.gov.in/'
 export const HELPLINE = '1800-233-1008'
 

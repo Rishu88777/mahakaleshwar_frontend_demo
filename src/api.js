@@ -1,8 +1,7 @@
 import { API_BASE_URL } from './config'
 
 const HEADERS = {
-  'Content-Type': 'application/json',
-  'ngrok-skip-browser-warning': 'true'
+  'Content-Type': 'application/json'
 }
 
 /**
@@ -27,15 +26,24 @@ export async function createBooking(booking) {
   }
 }
 
-/** Ask the bot to push the confirmation + QR ticket into the WhatsApp chat. */
+/**
+ * Ask the bot to push the confirmation + QR ticket into the WhatsApp chat.
+ * Returns true only when the backend actually accepted the confirmation, so
+ * the success screen can tell "ticket sent" apart from "could not send".
+ */
 export async function confirmBooking(bookingId) {
+  if (!bookingId) return false
   try {
     const res = await fetch(`${API_BASE_URL}/whatsapp/bot/api/v1/temple/booking/${bookingId}/confirm`, {
       method: 'POST',
       headers: HEADERS
     })
     if (!res.ok) throw new Error(`HTTP ${res.status}`)
+    const body = await res.json().catch(() => ({}))
+    // the API always answers 200 and carries the real status in the envelope
+    return body.code === undefined || body.code === 200
   } catch (e) {
     console.warn('confirmBooking failed, wa.me redirect fallback still applies', e)
+    return false
   }
 }

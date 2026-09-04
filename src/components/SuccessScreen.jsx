@@ -3,22 +3,23 @@ import { confirmBooking } from '../api'
 import { WA_NUMBER } from '../config'
 import { rupee } from '../utils/format'
 
-const CONFIRM_AFTER_SECONDS = 5 // WhatsApp ticket API is called after this pause
+const CONFIRM_AFTER_SECONDS = 2 // WhatsApp ticket API is called after this pause
 const REDIRECT_SECONDS = 10
 
 export default function SuccessScreen({ t, result }) {
   const [seconds, setSeconds] = useState(REDIRECT_SECONDS)
-  const [sent, setSent] = useState(false)
+  const [sent, setSent] = useState('')  // '' | 'sent' | 'failed'
 
   // No prefilled text — the confirm API pushes the QR ticket into the chat
   // automatically; the user just lands back on WhatsApp and finds it there.
   const waLink = `https://wa.me/${WA_NUMBER}`
 
   useEffect(() => {
-    // deliver the WhatsApp QR ticket 5s after payment success
+    // deliver the WhatsApp QR ticket shortly after payment success, so the
+    // message is already waiting in the chat when the redirect below fires
     const confirmTimer = setTimeout(async () => {
-      await confirmBooking(result.bookingId)
-      setSent(true)
+      const ok = await confirmBooking(result.bookingId)
+      setSent(ok ? 'sent' : 'failed')
     }, CONFIRM_AFTER_SECONDS * 1000)
     const tick = setInterval(() => setSeconds((s) => (s > 0 ? s - 1 : 0)), 1000)
     const go = setTimeout(() => { window.location.href = waLink }, REDIRECT_SECONDS * 1000)
@@ -59,10 +60,10 @@ export default function SuccessScreen({ t, result }) {
         </div>
       </div>
 
-      <div className={`wa-status ${sent ? 'sent' : ''}`} role="status">
-        {sent ? (
-          <>✅ {t.waTicketSent}</>
-        ) : (
+      <div className={`wa-status ${sent === 'sent' ? 'sent' : ''}`} role="status">
+        {sent === 'sent' && <>✅ {t.waTicketSent}</>}
+        {sent === 'failed' && <>💬 {t.backToWhatsApp}</>}
+        {!sent && (
           <><span className="wa-mini-spinner" aria-hidden="true"></span> {t.waTicketSending}</>
         )}
       </div>
